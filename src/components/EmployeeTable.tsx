@@ -40,11 +40,17 @@ const EmployeeTable = () => {
 
     // Updating sort functions
     const changeSortBy = (value: string) => {
-        if (value == "name" && sortBy == "name") {
+        if (value == "name") {
+            setSortBy(`${value}`);
+        } else if (value == "name") {
             setSortBy(`${value}-reverse`);
-        } else if (value == "hire-date" && sortBy == "hire-date") {
+        }
+        else if (value == "hire-date") {
+            setSortBy(`${value}`);
+        } else if (value == "hire-date") {
             setSortBy(`${value}-reverse`);
-        } else {
+        }
+        else {
             setSortBy(value);
         }
 
@@ -53,10 +59,10 @@ const EmployeeTable = () => {
         }
     };
 
-    const changeSortByJob = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const changeSortByJob = (jobTitle: string) => {
         setSortBy("job-title");
-
-        setSortByJob(e.target.value);
+        console.log(jobTitle);
+        setSortByJob(jobTitle);
     };
 
     // Delete employee
@@ -93,7 +99,7 @@ const EmployeeTable = () => {
 
     // Sorting the employees
     useEffect(() => {
-        const sortingEmployees = employees;
+        let sortingEmployees = [...employees];
 
         const handleSorting = () => {
             switch (sortBy) {
@@ -114,7 +120,10 @@ const EmployeeTable = () => {
                     );
                     break;
                 case "job-title":
-                    sortingEmployees.filter((employee: Employee) => employee.jobTitle == sortByJob);
+                    console.log("job title", sortByJob);
+                    sortingEmployees = sortingEmployees.filter((employee: Employee) => employee.jobTitle == sortByJob);
+
+                    console.log("job title", sortingEmployees);
                     break;
                 default:
                     sortingEmployees.sort((a: Employee, b: Employee) => a.id - b.id);
@@ -161,23 +170,39 @@ const EmployeeTable = () => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem onClick={() => changeSortBy("hire-date")}>Newest First</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => changeSortBy("hire-date-reverse")}>Oldest First</DropdownMenuItem>
+                                <DropdownMenuItem className='cursor-pointer' onClick={() => changeSortBy("hire-date")}>Newest First</DropdownMenuItem>
+                                <DropdownMenuItem className='cursor-pointer' onClick={() => changeSortBy("hire-date-reverse")}>Oldest First</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
 
-                        <select
-                            className="ml-3 text-sm border rounded p-1"
-                            value={sortBy === "job-title" ? sortByJob : ""}
-                            onChange={changeSortByJob}
-                        >
-                            <option value="" disabled>
-                                Job title
-                            </option>
-                            <option value="Customer Support">Customer Support</option>
-                            <option value="IT Support Specialist">IT Support Specialist</option>
-                            <option value="Software Engineer">Software Engineer</option>
-                        </select>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" className="w-[160px] h-[30px] font-normal  justify-start ml-3 text-sm border rounded p-1 cursor-pointer">
+                                    {sortByJob ? sortByJob : "Job title"}
+                                    {sortBy === "job-title" && <FaCaretDown className="ml-2" />}
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="bg-white border rounded shadow-md z-50">
+                                <DropdownMenuItem
+                                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                                    onClick={() => changeSortByJob("Customer Support")}
+                                >
+                                    Customer Support
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                                    onClick={() => changeSortByJob("IT Support Specialist")}
+                                >
+                                    IT Support Specialist
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                                    onClick={() => changeSortByJob("Software Engineer")}
+                                >
+                                    Software Engineer
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
             </div>

@@ -35,7 +35,7 @@ const login = async (loginInfo: AuthInfo, rememberMe: boolean) => {
 }
 
 const createUser = async (user: AuthInfo) => {
-    const response = await fetch(`${baseURL}Login`, {
+    const response = await fetch(`${baseURL}CreateUser`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -48,6 +48,7 @@ const createUser = async (user: AuthInfo) => {
         const message = `An error has occurred ${response.status}`
         throw new Error(message);
     }
+    console.log("User created successfully");
     return await response.json();
 }
 

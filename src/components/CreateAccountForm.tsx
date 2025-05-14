@@ -35,17 +35,23 @@ const CreateAccountForm = () => {
     try {
       const newUser = { id: 0, email: user.email, password: user.password };
 
-      if (await createUser(newUser)) {
+      console.log("Creating user:", newUser);
+      const result = await createUser(newUser);
+
+      if (result) {
         push("/login");
       } else {
+        console.error("User creation failed:", result);
         setCreationError(true);
       }
-    } catch {
+    } catch (err) {
+      console.error("Unexpected error:", err);
       setCreationError(true);
     }
 
     setCreatingAccount(false);
   };
+
 
   return (
     <>

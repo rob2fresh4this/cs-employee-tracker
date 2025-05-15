@@ -10,6 +10,8 @@ import { Button } from './ui/button';
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from './ui/table';
 import EmployeeModal from './EmployeeModal';
 
+const PAGE_SIZE = 10;
+
 const EmployeeTable = () => {
     const { push } = useRouter();
 
@@ -22,11 +24,13 @@ const EmployeeTable = () => {
     const [sortBy, setSortBy] = useState("");
     const [sortByJob, setSortByJob] = useState("");
 
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+
     // Function to get employees
     const handleGetEmployees = async () => {
         try {
             const result: Employee[] | "Not Authorized" = await getEmployees(token);
-            // const result: Employee[] | "Not Authorized" = [];
             if (result.toString() === "Not Authorized") {
                 localStorage.setItem("Not Authorized", 'true');
                 push("/login");
@@ -57,12 +61,13 @@ const EmployeeTable = () => {
         if (sortByJob) {
             setSortByJob("");
         }
+        setCurrentPage(1); // Reset to first page on sort
     };
 
     const changeSortByJob = (jobTitle: string) => {
         setSortBy("job-title");
-        console.log(jobTitle);
         setSortByJob(jobTitle);
+        setCurrentPage(1); // Reset to first page on filter
     };
 
     // Delete employee
@@ -120,10 +125,7 @@ const EmployeeTable = () => {
                     );
                     break;
                 case "job-title":
-                    console.log("job title", sortByJob);
                     sortingEmployees = sortingEmployees.filter((employee: Employee) => employee.jobTitle == sortByJob);
-
-                    console.log("job title", sortingEmployees);
                     break;
                 default:
                     sortingEmployees.sort((a: Employee, b: Employee) => a.id - b.id);
@@ -135,6 +137,25 @@ const EmployeeTable = () => {
         handleSorting();
 
     }, [employees, sortBy, sortByJob]);
+
+    // Pagination calculations
+    const totalPages = Math.ceil(sortedEmployees.length / PAGE_SIZE);
+    const paginatedEmployees = sortedEmployees.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        currentPage * PAGE_SIZE
+    );
+
+    const handlePrevPage = () => {
+        setCurrentPage((prev) => Math.max(prev - 1, 1));
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    };
+
+    const handlePageClick = (page: number) => {
+        setCurrentPage(page);
+    };
 
     return (
         <>
@@ -219,7 +240,7 @@ const EmployeeTable = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {sortedEmployees.length === 0 ? (
+                    {paginatedEmployees.length === 0 ? (
                         <TableRow>
                             <TableCell></TableCell>
                             <TableCell className="text-center">
@@ -228,8 +249,8 @@ const EmployeeTable = () => {
                             <TableCell></TableCell>
                         </TableRow>
                     ) : (
-                        sortedEmployees.map((employee, idx) => (
-                            <TableRow key={idx}>
+                        paginatedEmployees.map((employee, idx) => (
+                            <TableRow key={employee.id}>
                                 <TableCell className="font-medium">{employee.name}</TableCell>
                                 <TableCell>{employee.jobTitle}</TableCell>
                                 <TableCell>{employee.hireDate}</TableCell>
@@ -245,6 +266,36 @@ const EmployeeTable = () => {
                 </TableBody>
             </Table>
             {/* Display table - End */}
+
+            {/* Pagination controls */}
+            <div className="flex justify-end items-center mt-4 gap-2">
+                <Button
+                    variant="outline"
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1"
+                >
+                    Prev
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => (
+                    <Button
+                        key={i + 1}
+                        variant={currentPage === i + 1 ? "default" : "outline"}
+                        onClick={() => handlePageClick(i + 1)}
+                        className="px-3 py-1"
+                    >
+                        {i + 1}
+                    </Button>
+                ))}
+                <Button
+                    variant="outline"
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages || totalPages === 0}
+                    className="px-3 py-1"
+                >
+                    Next
+                </Button>
+            </div>
         </>
     )
 }

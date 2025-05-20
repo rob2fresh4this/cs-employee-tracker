@@ -11,13 +11,9 @@ interface AppContext {
 
 const AppContext = createContext<AppContext>({
     isLoggedIn: false,
-<<<<<<< HEAD
-    setIsLoggedIn: (bool: boolean) => {},
-=======
     setIsLoggedIn: (bool: boolean) => '',
     employeeId: 0,
     setEmployeeId: (id: number) => {}
->>>>>>> d04331a (going on vacation. enjoy :))
 });
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
@@ -38,13 +34,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }, [])
 
     return (
-<<<<<<< HEAD
-        <LoginContext.Provider value={ { isLoggedIn, setIsLoggedIn } }>
+        <AppContext.Provider value={{ isLoggedIn, setIsLoggedIn, employeeId, setEmployeeId }}>
             {children}
-        </LoginContext.Provider>
-=======
-        <AppContext.Provider value={ { isLoggedIn, setIsLoggedIn, employeeId, setEmployeeId } } />
->>>>>>> d04331a (going on vacation. enjoy :))
+        </AppContext.Provider>
     )
 }
 

@@ -264,11 +264,11 @@ const EmployeeTable = () => {
                                 <TableCell>{employee.jobTitle}</TableCell>
                                 <TableCell>{employee.hireDate}</TableCell>
                                 <TableCell className="flex gap-3 justify-end">
-                                    <Button onClick={() => handleViewEmployee(employee.id)}>
+                                    <Button className='cursor-pointer' onClick={() => handleViewEmployee(employee.id)}>
                                         View
                                     </Button>
                                     <EmployeeModal type="Edit" employee={employee} refreshEmployees={handleGetEmployees} />
-                                    <Button variant="destructive" onClick={() => handleDeleteEmployee(employee.id)}>
+                                    <Button variant="destructive" className='cursor-pointer' onClick={() => handleDeleteEmployee(employee.id)}>
                                         Delete
                                     </Button>
                                 </TableCell>
@@ -285,7 +285,7 @@ const EmployeeTable = () => {
                     variant="outline"
                     onClick={handlePrevPage}
                     disabled={currentPage === 1}
-                    className="px-3 py-1"
+                    className="px-3 py-1 cursor-pointer"
                 >
                     Prev
                 </Button>
@@ -294,7 +294,7 @@ const EmployeeTable = () => {
                         key={i + 1}
                         variant={currentPage === i + 1 ? "default" : "outline"}
                         onClick={() => handlePageClick(i + 1)}
-                        className="px-3 py-1"
+                        className="px-3 py-1 cursor-pointer"
                     >
                         {i + 1}
                     </Button>
@@ -303,7 +303,7 @@ const EmployeeTable = () => {
                     variant="outline"
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages || totalPages === 0}
-                    className="px-3 py-1"
+                    className="px-3 py-1 cursor-pointer"
                 >
                     Next
                 </Button>

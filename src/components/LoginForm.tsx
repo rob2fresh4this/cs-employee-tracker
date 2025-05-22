@@ -125,12 +125,12 @@ const LoginForm = () => {
                     checked={rememberMe}
                     onCheckedChange={(checked) => setRememberMe(Boolean(checked))}
                 />
-                <Label htmlFor="remember">Remember me</Label>
+                <Label htmlFor="remember" className='cursor-pointer'>Remember me</Label>
             </div>
-            <Button onClick={handleLogin} disabled={!inputsFilled || loggingIn}>
+            <Button onClick={handleLogin} disabled={!inputsFilled || loggingIn} className='cursor-pointer'>
                 {loggingIn ? (
                     <>
-                        <AiOutlineLoading className="h-6 w-6 animate-spin mr-3" />
+                        <AiOutlineLoading className="h-6 w-6 animate-spin mr-3 " />
                         Logging in...
                     </>
                 ) : (
